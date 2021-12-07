@@ -27,11 +27,11 @@ library(ggplot2)
 
  
 # Read in Data ----------------------------------------
-
-data_transactions = read.csv("./store-sales-time-series-forecasting/transactions.csv")
-data_oil = read.csv("./store-sales-time-series-forecasting/oil.csv")
-data_holiday_events = read.csv("./store-sales-time-series-forecasting/holidays_events.csv")
-data_stores = read.csv("./store-sales-time-series-forecasting/stores.csv")
+base_path = "~/DSA/R_project/Favorita_Shiny_R/predicting_favorita/"
+data_transactions = read.csv(paste(base_path,"store-sales-time-series-forecasting/transactions.csv", sep =""))
+data_oil = read.csv(paste(base_path,"store-sales-time-series-forecasting/oil.csv", sep =""))
+data_holiday_events = read.csv(paste(base_path,"store-sales-time-series-forecasting/holidays_events.csv", sep =""))
+data_stores = read.csv(paste(base_path,"store-sales-time-series-forecasting/stores.csv", sep =""))
 
 
 # Create Primary DataFrame ----------------------------------------------------
@@ -54,7 +54,7 @@ fav_df <- merge(x=data_transactions, y=data_stores,
 # Plot Multiple Stores Over specific window frame -----------------------------
 
 #- Selected Stores
-stores_use = c(32)
+stores_use = c(32, 11)
 
 #- Selected Time Frame
 start_date = "2016-01-01"
@@ -69,7 +69,7 @@ select_stores <- data_transactions %>%
 
 #- Plot the result
 ggplot(select_stores, 
-       aes(x=date, y=transactions, col=store_nbr)
+       aes(x=date, y=transactions, group=store_nbr, col=store_nbr)
 ) + 
   geom_line()
 
