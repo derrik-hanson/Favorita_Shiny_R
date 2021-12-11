@@ -8,6 +8,7 @@ library(corrgram)
 library(Hmisc)
 library(performanceEstimation)
 library(zoo)
+library(lubridate)
 
 # Shiny Project Ideas --------------------------------
 
@@ -67,7 +68,6 @@ for (y in train_years) {
 data_train_yr <- list()
 for (y in train_years) {
   data_train_yr[[y]] <- str_glue("data_train_{y}")
-  
 }
 
 # Separate Training into pre Earthquake and post quake ------------------------
@@ -276,6 +276,8 @@ data_item_oil <- data_train %>%
   fill(oil_price, .direction="up") %>%
   select(-dcoilwtico)
 
+
+
 # data_item_oil2 <- fill(data_item_oil$dcoilwtico, .direction ="downup")
 # data_item_oil3 <- na.approx(data_item_oil$dcoilwtico)
 
@@ -306,7 +308,24 @@ store_type_opts <- unique(fav_df$type.x) %>% sort()
 cluster_opts <- unique(fav_df$cluster) %>% sort()
 
 
+# group dates by month 
+
+in_df <- post_quake_train
+out_df <- in_df %>%
+  mutate(date=as.Date(date, format="%Y-%m-%d")) %>%
+  group_by(month=floor_date(date, "month")) %>%
+  group_by(id, .add=TRUE) %>%
+  arrange(id, .group_by=TRUE) %>%
+  group_by(store_nbr, .add=TRUE)  %>%
+  summarize(total_sales=sum(sales))
+  
+  
+
 # -- Shiny Feature -------------------------------------
+
+# Monthly Analysis 
+
+
 # Basic Correlation of each store with oil
 
 
